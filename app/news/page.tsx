@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import LiveCollection from '@/components/live-collection'
 import {
   ArrowRight,
   Bell,
@@ -571,6 +572,7 @@ export default function NewsPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='news' title='Latest JULSA news' />
     </main>
   )
 }

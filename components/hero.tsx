@@ -116,7 +116,7 @@ export default function Hero() {
             style={{ animationDelay: '0.4s' }}
           >
             <a
-              href='#membership'
+              href='/members#register'
               className='group inline-flex items-center gap-2 rounded-full bg-gold-400 px-7 py-3.5 text-sm font-semibold text-night-950 shadow-[0_0_40px_-8px_rgba(212,175,55,0.7)] transition-all hover:bg-gold-300 hover:shadow-[0_0_50px_-6px_rgba(212,175,55,0.85)]'
             >
               Become a Member

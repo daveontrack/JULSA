@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import LiveCollection from '@/components/live-collection'
 import {
   ArrowRight,
   Award,
@@ -692,6 +693,7 @@ export default function CareerPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='opportunities' title='Current opportunities' />
     </main>
   )
 }

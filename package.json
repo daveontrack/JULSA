@@ -3,14 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node api.js && next dev",
-    "build": "node api.js && next build",
-    "start": "node api.js && next start",
-    "lint": "eslint"
+    "dev": "next dev",
+    "prebuild": "prisma generate",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --test tests/submission-validation.test.mts",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:introspect": "prisma db pull"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "dotenv": "^18.0.9",
     "lucide-react": "^1.52.0",
-    "next": "16.3.6",
+    "next": "^16.4.3",
+    "pg": "^8.23.1",
     "postcss": "^8.5.28",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -18,10 +27,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "^16.4.3",
+    "prisma": "^7.10.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"
   }

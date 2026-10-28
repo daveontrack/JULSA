@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import LiveCollection from '@/components/live-collection'
 import { useMemo, useState } from 'react'
 import {
   ArrowLeft,
@@ -496,6 +497,7 @@ export default function GalleryPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='gallery' title='Recent gallery items' />
     </main>
   )
 }

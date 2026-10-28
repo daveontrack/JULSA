@@ -16,6 +16,7 @@ import {
   Scale,
   X,
 } from 'lucide-react'
+import LiveCollection from '@/components/live-collection'
 
 type ResourceCategory =
   | 'All'
@@ -746,6 +747,7 @@ export default function AcademicHubPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='academic-resources' title='Latest academic resources' />
     </main>
   )
 }

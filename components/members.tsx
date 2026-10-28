@@ -121,7 +121,7 @@ export default function Members() {
 
               <a
                 id="join"
-                href="#join"
+                href="/members#register"
                 className="group mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-400 px-7 py-4 text-sm font-semibold text-night-950 shadow-[0_0_45px_-8px_rgba(212,175,55,0.7)] transition-all hover:bg-gold-300 hover:shadow-[0_0_55px_-6px_rgba(212,175,55,0.85)]"
               >
                 Apply for Membership

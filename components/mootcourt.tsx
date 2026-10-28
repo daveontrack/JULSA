@@ -71,7 +71,7 @@ export default function MootCourt() {
           </Reveal>
           <Reveal delay={0.15}>
             <a
-              href="#join"
+              href="/#join"
               className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/50 bg-gold-400/10 px-6 py-3 text-sm font-semibold text-gold-200 transition-all hover:bg-gold-400 hover:text-night-950"
             >
               Join a Moot Team

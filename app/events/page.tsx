@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowRight,
   BookOpen,
@@ -30,7 +30,7 @@ type EventCategory =
   | 'Community'
 
 type Event = {
-  id: number
+  id: number | string
   title: string
   category: Exclude<EventCategory, 'All'>
   date: string
@@ -56,7 +56,7 @@ const categories: {
   { label: 'Community', icon: Handshake },
 ]
 
-const events: Event[] = [
+const fallbackEvents: Event[] = [
   {
     id: 1,
     title: 'Moot Court & Legal Advocacy Training',
@@ -138,6 +138,46 @@ const events: Event[] = [
   },
 ]
 
+type EventRecord = Record<string, unknown>
+
+function recordText(record: EventRecord, key: string) {
+  const value = record[key]
+  return typeof value === 'string' || typeof value === 'number' ? String(value) : ''
+}
+
+function mapEventRecord(record: EventRecord, index: number): Event {
+  const date = recordText(record, 'date_formatted') || recordText(record, 'created_at')
+  const knownCategories: Exclude<EventCategory, 'All'>[] = [
+    'Moot Court', 'Academic', 'Debate', 'Career', 'Seminar', 'Community',
+  ]
+  const rawCategory = recordText(record, 'category')
+  const category = knownCategories.includes(rawCategory as Exclude<EventCategory, 'All'>)
+    ? rawCategory as Exclude<EventCategory, 'All'>
+    : 'Academic'
+  const icons = {
+    'Moot Court': Gavel,
+    Academic: BookOpen,
+    Debate: Mic2,
+    Career: GraduationCap,
+    Seminar: Users,
+    Community: Handshake,
+  }
+
+  return {
+    id: recordText(record, 'id') || index,
+    title: recordText(record, 'title') || 'JULSA event',
+    category,
+    date,
+    day: recordText(record, 'day_number') || date.match(/\b\d{1,2}\b/)?.[0] || '',
+    month: (recordText(record, 'month_name') || date.match(/[A-Za-z]+/)?.[0] || '').slice(0, 3).toUpperCase(),
+    time: recordText(record, 'time_range'),
+    location: recordText(record, 'location'),
+    description: recordText(record, 'description'),
+    icon: icons[category],
+    featured: record.featured === true,
+  }
+}
+
 const eventHighlights = [
   {
     title: 'Moot Court',
@@ -166,16 +206,40 @@ const eventHighlights = [
 ]
 
 export default function Events() {
+  const [eventItems, setEventItems] = useState<Event[]>(fallbackEvents)
   const [activeCategory, setActiveCategory] = useState<EventCategory>('All')
 
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
 
   const [searchQuery, setSearchQuery] = useState('')
 
+  useEffect(() => {
+    let active = true
+    const loadEvents = async () => {
+      try {
+        const response = await fetch('/api/content/events', { cache: 'no-store' })
+        if (!response.ok) return
+        const result = await response.json()
+        if (active && Array.isArray(result.rows)) {
+          setEventItems(result.rows.length ? result.rows.map(mapEventRecord) : fallbackEvents)
+        }
+      } catch {
+        // Keep the built-in events visible when the content service is unavailable.
+      }
+    }
+
+    void loadEvents()
+    const refresh = window.setInterval(() => { void loadEvents() }, 5_000)
+    return () => {
+      active = false
+      window.clearInterval(refresh)
+    }
+  }, [])
+
   const filteredEvents = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
 
-    return events.filter((event) => {
+    return eventItems.filter((event) => {
       const matchesCategory =
         activeCategory === 'All' || event.category === activeCategory
 
@@ -187,9 +251,9 @@ export default function Events() {
 
       return matchesCategory && matchesSearch
     })
-  }, [activeCategory, searchQuery])
+  }, [eventItems, activeCategory, searchQuery])
 
-  const featuredEvent = events.find((event) => event.featured)
+  const featuredEvent = eventItems.find((event) => event.featured) ?? eventItems[0]
 
   return (
     <main className='min-h-screen bg-[#07111f] text-white'>
@@ -604,7 +668,7 @@ export default function Events() {
             </div>
 
             <Link
-              href='/#membership'
+              href='/members#register'
               className='group inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#07111f] px-7 py-4 font-semibold text-white transition hover:bg-[#102238]'
             >
               Become a Member

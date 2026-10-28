@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   Award,
@@ -106,10 +106,53 @@ const faqs: FAQ[] = [
 export default function MembershipPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [submitted, setSubmitted] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
+  const idempotencyKey = useRef<string | null>(null)
+  const idempotencyPayload = useRef<string | null>(null)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (window.location.hash !== '#register') return
+    window.requestAnimationFrame(() => {
+      document.getElementById('register')?.scrollIntoView({ block: 'start' })
+    })
+  }, [])
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setSubmitted(true)
+    setPending(true)
+    setError('')
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const values: Record<string, string | boolean> = {}
+    formData.forEach((value, key) => {
+      if (typeof value === 'string') values[key] = value
+    })
+    values.consent = formData.has('consent')
+    const payload = JSON.stringify(values)
+    if (!idempotencyKey.current || idempotencyPayload.current !== payload) {
+      idempotencyKey.current = crypto.randomUUID()
+      idempotencyPayload.current = payload
+    }
+    try {
+      const response = await fetch('/api/membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, idempotencyKey: idempotencyKey.current }),
+      })
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}))
+        throw new Error(result.error || 'We could not submit your application. Please try again.')
+      }
+      setSubmitted(true)
+      idempotencyKey.current = null
+      idempotencyPayload.current = null
+      form.reset()
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Please try again later.')
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -226,7 +269,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Registration */}
-      <section id='register' className='mx-auto max-w-7xl px-6 py-20 lg:px-8'>
+      <section id='register' className='scroll-mt-24 mx-auto max-w-7xl px-6 py-20 lg:px-8'>
         <div className='grid gap-12 lg:grid-cols-[0.75fr_1.25fr]'>
           <div>
             <p className='text-sm font-medium uppercase tracking-[0.2em] text-[#d4af37]'>
@@ -263,9 +306,7 @@ export default function MembershipPage() {
 
             <div className='mt-5 rounded-2xl border border-[#d4af37]/15 bg-[#d4af37]/5 p-6'>
               <p className='text-sm leading-6 text-slate-400'>
-                Your registration form can later be connected directly to
-                Supabase so that membership applications are stored and reviewed
-                by the association.
+                Your details are submitted securely for the JULSA membership process.
               </p>
             </div>
           </div>
@@ -282,14 +323,13 @@ export default function MembershipPage() {
                 </h3>
 
                 <p className='mt-3 max-w-md text-sm leading-6 text-slate-400'>
-                  Thank you for your interest in becoming a JULSA member. This
-                  form is currently a frontend registration experience and can
-                  be connected to the JULSA membership database next.
+                  Your application has been securely received. JULSA will follow
+                  up using the contact details you provided.
                 </p>
 
                 <button
                   type='button'
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => { setSubmitted(false); setError('') }}
                   className='mt-7 rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10'
                 >
                   Submit another registration
@@ -297,6 +337,10 @@ export default function MembershipPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className='space-y-5'>
+                <div aria-hidden='true' className='absolute -left-[10000px] h-px w-px overflow-hidden'>
+                  <label htmlFor='membership-website'>Leave this field empty</label>
+                  <input id='membership-website' name='website' type='text' tabIndex={-1} autoComplete='off' />
+                </div>
                 <div>
                   <label
                     htmlFor='fullName'
@@ -415,6 +459,7 @@ export default function MembershipPage() {
                   <label className='flex cursor-pointer items-start gap-3'>
                     <input
                       type='checkbox'
+                      name='consent'
                       required
                       className='mt-1 h-4 w-4 accent-[#d4af37]'
                     />
@@ -427,11 +472,14 @@ export default function MembershipPage() {
                   </label>
                 </div>
 
+                {error && <p role='alert' className='text-sm text-red-300'>{error}</p>}
+
                 <button
                   type='submit'
+                  disabled={pending}
                   className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#d4af37] px-5 py-3.5 font-medium text-[#07111f] transition hover:bg-[#e4c45d]'
                 >
-                  Submit Membership Registration
+                  {pending ? 'Submitting…' : 'Submit Membership Registration'}
                   <Send size={17} />
                 </button>
               </form>

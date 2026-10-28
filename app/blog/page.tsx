@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import LiveCollection from '@/components/live-collection'
 import {
   ArrowRight,
   BookOpen,
@@ -578,6 +579,7 @@ export default function BlogPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='blog-posts' title='Latest blog posts' />
     </main>
   )
 }

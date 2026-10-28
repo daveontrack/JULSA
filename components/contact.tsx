@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowIcon, CircleCheckIcon } from "./icons";
 import Reveal from "./reveal";
 
@@ -32,12 +32,42 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState("");
+  const [failed, setFailed] = useState(false);
+  const idempotencyKey = useRef<string | null>(null);
+  const idempotencyPayload = useRef<string | null>(null);
 
-  function handleSubmit(event: React.FormEvent) {
+  async function submitToBackend(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const subject = encodeURIComponent(`Inquiry from ${name || "a prospective member"}`);
-    const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
-    window.location.href = `mailto:julsa@ju.edu.et?subject=${subject}&body=${body}`;
+    setPending(true);
+    setStatus("");
+    setFailed(false);
+    try {
+      const form = event.currentTarget;
+      const body = { name, email, subject: `Inquiry from ${name}`, message, website: (form.elements.namedItem("website") as HTMLInputElement).value };
+      const payload = JSON.stringify(body);
+      if (!idempotencyKey.current || idempotencyPayload.current !== payload) {
+        idempotencyKey.current = crypto.randomUUID();
+        idempotencyPayload.current = payload;
+      }
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...body, idempotencyKey: idempotencyKey.current }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Please try again later.");
+      setName(""); setEmail(""); setMessage("");
+      idempotencyKey.current = null;
+      idempotencyPayload.current = null;
+      setStatus("Message sent. Thank you for contacting JULSA.");
+    } catch (error) {
+      setFailed(true);
+      setStatus(error instanceof Error ? error.message : "Please try again later.");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -134,7 +164,7 @@ export default function Contact() {
           {/* Form */}
           <Reveal direction="right" delay={0.15}>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={submitToBackend}
               className="h-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-sm lg:p-10"
             >
             <h3 className="font-display text-xl font-bold text-cream-50">
@@ -189,13 +219,20 @@ export default function Contact() {
                   required
                 />
               </div>
+              <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+                <label htmlFor="contact-website">Leave this field empty</label>
+                <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
             </div>
+
+            {status && <p role={failed ? "alert" : "status"} className={`mt-4 text-sm ${failed ? "text-red-300" : "text-cream-100/75"}`}>{status}</p>}
 
               <button
                 type="submit"
+                disabled={pending}
                 className="group mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-400 px-7 py-4 text-sm font-semibold text-night-950 shadow-[0_0_45px_-8px_rgba(212,175,55,0.7)] transition-all hover:bg-gold-300 hover:shadow-[0_0_55px_-6px_rgba(212,175,55,0.85)]"
               >
-                Send Message
+                {pending ? "Sending…" : "Send Message"}
                 <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
             </form>

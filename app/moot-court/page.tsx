@@ -20,6 +20,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import LiveCollection from '@/components/live-collection'
 
 type CompetitionStatus = 'Upcoming' | 'Registration Open' | 'Completed'
 
@@ -680,6 +681,7 @@ export default function MootCourtPage() {
           </div>
         </div>
       )}
+      <LiveCollection collection='competitions' title='Current moot court competitions' />
     </main>
   )
 }

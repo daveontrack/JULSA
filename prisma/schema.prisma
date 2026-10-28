@@ -1,0 +1,289 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["auth", "public"]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model academic_resources {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title          String    @db.VarChar(255)
+  category       String    @db.VarChar(100)
+  resource_type  String    @db.VarChar(50)
+  subject        String    @db.VarChar(150)
+  year_level     String    @db.VarChar(50)
+  description    String
+  file_url       String?
+  download_count Int?      @default(0)
+  featured       Boolean?  @default(false)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category], map: "idx_resources_category")
+  @@index([featured], map: "idx_resources_featured")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model blog_posts {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title          String    @db.VarChar(300)
+  slug           String    @unique @db.VarChar(350)
+  excerpt        String
+  content        String?
+  category       String    @db.VarChar(100)
+  post_type      String    @db.VarChar(50)
+  author         String    @db.VarChar(255)
+  author_role    String?   @db.VarChar(150)
+  published_date String?   @db.VarChar(100)
+  read_time      String?   @default("5 min read") @db.VarChar(50)
+  tags           String[]  @default([])
+  featured       Boolean?  @default(false)
+  views          Int?      @default(0)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category], map: "idx_blog_category")
+  @@index([featured], map: "idx_blog_featured")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model competition_registrations {
+  id                String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  competition_id    String?       @db.Uuid
+  team_name         String        @db.VarChar(255)
+  lead_student_name String        @db.VarChar(255)
+  lead_student_id   String        @db.VarChar(50)
+  lead_email        String        @db.VarChar(255)
+  lead_phone        String        @db.VarChar(50)
+  team_members      Json?         @default("[]")
+  memorial_file_url String?
+  status            String?       @default("Pending") @db.VarChar(50)
+  created_at        DateTime?     @default(now()) @db.Timestamptz(6)
+  competitions      competitions? @relation(fields: [competition_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model competitions {
+  id                        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title                     String                      @db.VarChar(255)
+  category                  String                      @db.VarChar(100)
+  status                    String                      @db.VarChar(50)
+  competition_date          String                      @db.VarChar(100)
+  time_schedule             String?                     @db.VarChar(100)
+  location                  String                      @db.VarChar(255)
+  description               String
+  rules_document_url        String?
+  featured                  Boolean?                    @default(false)
+  created_at                DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime?                   @default(now()) @db.Timestamptz(6)
+  competition_registrations competition_registrations[]
+
+  @@index([status], map: "idx_competitions_status")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model contact_messages {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name            String    @db.VarChar(255)
+  email           String    @db.VarChar(255)
+  phone           String?   @db.VarChar(50)
+  subject         String?   @db.VarChar(255)
+  message         String
+  status          String?   @default("Unread") @db.VarChar(50)
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  idempotency_key String?   @unique @db.Uuid
+
+  @@index([status], map: "idx_contact_status")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model event_registrations {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  event_id      String?   @db.Uuid
+  student_name  String    @db.VarChar(255)
+  student_id    String    @db.VarChar(50)
+  email         String    @db.VarChar(255)
+  phone         String?   @db.VarChar(50)
+  registered_at DateTime? @default(now()) @db.Timestamptz(6)
+  attended      Boolean?  @default(false)
+  events        events?   @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([event_id], map: "idx_event_reg_event_id")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model events {
+  id                  String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title               String                @db.VarChar(255)
+  category            String                @db.VarChar(100)
+  date_formatted      String                @db.VarChar(100)
+  day_number          String?               @db.VarChar(10)
+  month_name          String?               @db.VarChar(10)
+  time_range          String                @db.VarChar(100)
+  location            String                @db.VarChar(255)
+  description         String
+  featured            Boolean?              @default(false)
+  image_url           String?
+  created_at          DateTime?             @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamptz(6)
+  event_registrations event_registrations[]
+
+  @@index([category], map: "idx_events_category")
+  @@index([featured], map: "idx_events_featured")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model gallery_items {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title         String    @db.VarChar(255)
+  category      String    @db.VarChar(100)
+  description   String?
+  image_url     String
+  date_label    String?   @db.VarChar(100)
+  display_order Int?      @default(0)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category], map: "idx_gallery_category")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model julsa_admins {
+  user_id    String   @id @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leaders {
+  id                String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name              String    @db.VarChar(255)
+  role              String    @db.VarChar(150)
+  image_url         String?
+  description       String?
+  featured          Boolean?  @default(false)
+  is_current        Boolean?  @default(true)
+  display_order     Int?      @default(0)
+  term_period       String?   @db.VarChar(50)
+  linkedin_url      String?
+  telegram_username String?   @db.VarChar(100)
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([is_current, display_order], map: "idx_leaders_display")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model members {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  full_name       String    @db.VarChar(255)
+  student_id      String    @unique @db.VarChar(50)
+  year_of_study   String    @db.VarChar(50)
+  phone           String    @db.VarChar(50)
+  email           String    @db.VarChar(255)
+  status          String?   @default("Pending") @db.VarChar(50)
+  notes           String?
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @db.Timestamptz(6)
+  idempotency_key String?   @unique @db.Uuid
+
+  @@index([status], map: "idx_members_status")
+  @@index([student_id], map: "idx_members_student_id")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model news {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title          String    @db.VarChar(300)
+  slug           String    @unique @db.VarChar(350)
+  excerpt        String
+  content        String?
+  category       String    @db.VarChar(100)
+  news_type      String    @db.VarChar(50)
+  date_formatted String?   @db.VarChar(100)
+  read_time      String?   @default("3 min read") @db.VarChar(50)
+  tags           String[]  @default([])
+  featured       Boolean?  @default(false)
+  image_url      String?
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category], map: "idx_news_category")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model opportunities {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title        String    @db.VarChar(255)
+  organization String    @db.VarChar(255)
+  category     String    @db.VarChar(100)
+  status       String    @db.VarChar(50)
+  deadline     String    @db.VarChar(100)
+  location     String    @db.VarChar(255)
+  description  String
+  apply_url    String?
+  tags         String[]  @default([])
+  featured     Boolean?  @default(false)
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category], map: "idx_opportunities_category")
+  @@index([status], map: "idx_opportunities_status")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model profiles {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email      String    @unique @db.VarChar(255)
+  full_name  String    @db.VarChar(255)
+  role       String?   @default("student") @db.VarChar(50)
+  avatar_url String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publications {
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title            String    @db.VarChar(255)
+  description      String
+  edition          String    @db.VarChar(100)
+  publication_type String    @db.VarChar(100)
+  pages            Int?      @default(1)
+  file_url         String?
+  cover_image_url  String?
+  published_date   String    @db.VarChar(100)
+  created_at       DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}

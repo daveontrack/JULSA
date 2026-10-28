@@ -7,6 +7,7 @@ import {
 } from '@/components/icons'
 import Image from 'next/image'
 import Link from 'next/link'
+import LiveCollection from '@/components/live-collection'
 
 const OBJECTIVES = [
   'Promote academic excellence and support students in their legal education.',
@@ -731,6 +732,7 @@ export default function AboutUs() {
           </div>
         </div>
       </section>
+      <LiveCollection collection='leaders' title='JULSA leadership' />
     </main>
   )
 }

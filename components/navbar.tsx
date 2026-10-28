@@ -48,7 +48,7 @@ export default function Navbar() {
     return href
   }
 
-  const joinHref = pathname === '/' ? '#join' : '/#join'
+  const joinHref = '/#join'
 
   return (
     <header

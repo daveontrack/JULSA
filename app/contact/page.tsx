@@ -1,14 +1,45 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { CheckCircle2, Mail, MapPin, Phone, Send } from 'lucide-react'
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
+  const idempotencyKey = useRef<string | null>(null)
+  const idempotencyPayload = useRef<string | null>(null)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setSubmitted(true)
+    setPending(true)
+    setError('')
+    const form = event.currentTarget
+    const values = Object.fromEntries(new FormData(form).entries())
+    const payload = JSON.stringify(values)
+    if (!idempotencyKey.current || idempotencyPayload.current !== payload) {
+      idempotencyKey.current = crypto.randomUUID()
+      idempotencyPayload.current = payload
+    }
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...values, idempotencyKey: idempotencyKey.current }),
+      })
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}))
+        throw new Error(result.error || 'We could not send your message. Please try again.')
+      }
+      setSubmitted(true)
+      idempotencyKey.current = null
+      idempotencyPayload.current = null
+      form.reset()
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Please try again later.')
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -105,7 +136,7 @@ export default function ContactPage() {
 
                 <button
                   type='button'
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => { setSubmitted(false); setError('') }}
                   className='mt-6 text-sm font-semibold text-[#d4af37] hover:text-[#e5c45b]'
                 >
                   Send another message
@@ -188,11 +219,19 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  <div aria-hidden='true' className='absolute -left-[10000px] h-px w-px overflow-hidden'>
+                    <label htmlFor='website'>Leave this field empty</label>
+                    <input id='website' name='website' type='text' tabIndex={-1} autoComplete='off' />
+                  </div>
+
+                  {error && <p role='alert' className='text-sm text-red-300'>{error}</p>}
+
                   <button
                     type='submit'
+                    disabled={pending}
                     className='inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#d4af37] px-6 py-3.5 text-sm font-bold text-[#07111f] transition hover:bg-[#e5c45b]'
                   >
-                    Send Message
+                    {pending ? 'Sending…' : 'Send Message'}
                     <Send className='h-4 w-4' />
                   </button>
                 </form>

@@ -165,7 +165,7 @@ export default function Events() {
                 {/* Actions */}
                 <div className='relative mt-8 flex flex-wrap gap-3'>
                   <a
-                    href='#membership'
+                    href='/members#register'
                     className='inline-flex items-center gap-2 rounded-full bg-gold-400 px-5 py-2.5 text-sm font-semibold text-night-950 transition-colors hover:bg-gold-300'
                   >
                     Join JULSA
