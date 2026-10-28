@@ -82,18 +82,6 @@ npm run dev</code></pre>
 
 Open <a href="http://localhost:3000">http://localhost:3000</a>.
 
-### Configure environment variables
-
-Create a local .env file and set the values for your Supabase project. Keep this file private; environment files are ignored by Git.
-
-<pre><code>DATABASE_URL=postgresql://...
-DIRECT_URL=postgresql://...
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-supabase-anon-key
-NEXT_PUBLIC_SITE_URL=http://localhost:3000</code></pre>
-
-DATABASE_URL is used by the application. DIRECT_URL is used by Prisma database tooling. Use the connection values provided by your Supabase project.
-
 ### Database setup
 
 The SQL setup files live in supabase/migrations. Review and apply the required migrations to the target Supabase project before enabling the related features. Admin access also requires an administrator account that is allowlisted in the julsa_admins table.
