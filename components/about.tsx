@@ -138,7 +138,7 @@ export default function About({
                 <Reveal
                   key={pillar.title}
                   delay={0.12 + index * 0.08}
-                  className='group rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.05]'
+                  className='group rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-gold-400/5'
                 >
                   <span className='flex h-12 w-12 items-center justify-center rounded-xl border border-gold-400/30 bg-gold-400/10 text-gold-300 transition-colors duration-300 group-hover:bg-gold-400 group-hover:text-night-950'>
                     <pillar.icon className='h-6 w-6' />

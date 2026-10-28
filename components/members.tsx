@@ -75,7 +75,7 @@ export default function Members() {
                   key={benefit.title}
                   as="li"
                   delay={0.12 + index * 0.06}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all hover:border-gold-400/40 hover:bg-white/[0.05]"
+                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all hover:-translate-y-0.5 hover:border-gold-400/40 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-gold-400/5"
                 >
                   <div className="flex items-center gap-2.5">
                     <CircleCheckIcon className="h-5 w-5 shrink-0 text-gold-300" />
@@ -122,7 +122,7 @@ export default function Members() {
               <a
                 id="join"
                 href="/members#register"
-                className="group mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-400 px-7 py-4 text-sm font-semibold text-night-950 shadow-[0_0_45px_-8px_rgba(212,175,55,0.7)] transition-all hover:bg-gold-300 hover:shadow-[0_0_55px_-6px_rgba(212,175,55,0.85)]"
+                className="group mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-300 to-gold-400 px-7 py-4 text-sm font-semibold text-night-950 shadow-[0_0_45px_-8px_rgba(212,175,55,0.7)] transition-all hover:from-gold-200 hover:to-gold-300 hover:shadow-[0_0_55px_-6px_rgba(212,175,55,0.85)] hover:scale-[1.01]"
               >
                 Apply for Membership
                 <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -54,8 +54,8 @@ export default function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 w-full transition-all duration-300 ${
         scrolled || mobileOpen
-          ? 'border-b border-white/10 bg-night-950/95 shadow-lg shadow-black/30 backdrop-blur-xl'
-          : 'border-b border-transparent bg-night-950/40 backdrop-blur-md'
+          ? 'border-b border-white/10 bg-night-950/95 shadow-lg shadow-black/40 backdrop-blur-xl'
+          : 'border-b border-transparent bg-gradient-to-b from-night-950/60 to-transparent backdrop-blur-md'
       }`}
     >
       <div className='mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4 lg:px-8'>
@@ -103,7 +103,7 @@ export default function Navbar() {
         {/* Desktop Join Button */}
         <Link
           href={joinHref}
-          className='hidden shrink-0 rounded-full border border-gold-400/50 bg-gold-400/10 px-5 py-2.5 text-sm font-semibold text-gold-200 transition-all hover:bg-gold-400 hover:text-night-950 lg:inline-flex'
+          className='hidden shrink-0 rounded-full border border-gold-400/50 bg-gold-400/10 px-5 py-2.5 text-sm font-semibold text-gold-200 transition-all hover:bg-gradient-to-r hover:from-gold-300 hover:to-gold-400 hover:text-night-950 hover:scale-[1.02] lg:inline-flex'
         >
           Join Us
         </Link>
@@ -112,7 +112,7 @@ export default function Navbar() {
         <div className='flex items-center gap-2 lg:hidden'>
           <Link
             href={joinHref}
-            className='hidden rounded-full bg-gold-400 px-4 py-2 text-xs font-semibold text-night-950 transition-colors hover:bg-gold-300 sm:inline-flex'
+            className='hidden rounded-full bg-gradient-to-r from-gold-300 to-gold-400 px-4 py-2 text-xs font-semibold text-night-950 transition-all hover:from-gold-200 hover:to-gold-300 hover:scale-[1.02] sm:inline-flex'
           >
             Join Us
           </Link>
@@ -171,7 +171,7 @@ export default function Navbar() {
             <Link
               href={joinHref}
               onClick={() => setMobileOpen(false)}
-              className='flex w-full items-center justify-center rounded-full bg-gold-400 px-5 py-3 text-sm font-semibold text-night-950 transition-colors hover:bg-gold-300'
+              className='flex w-full items-center justify-center rounded-full bg-gradient-to-r from-gold-300 to-gold-400 px-5 py-3 text-sm font-semibold text-night-950 transition-all hover:from-gold-200 hover:to-gold-300'
             >
               Join JULSA
             </Link>

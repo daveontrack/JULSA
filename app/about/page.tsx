@@ -348,7 +348,7 @@ export default function AboutUs() {
 
             <Link
               href='/#contact'
-              className='group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-gold-300 transition-colors hover:text-gold-200'
+              className='group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-gold-300 transition-all hover:text-gold-200 hover:gap-3'
             >
               Connect with JULSA
               <ArrowIcon className='h-4 w-4 transition-transform group-hover:translate-x-1' />
@@ -723,7 +723,7 @@ export default function AboutUs() {
 
               <Link
                 href='/#join'
-                className='group mt-8 inline-flex items-center gap-2 rounded-full bg-gold-400 px-6 py-3 text-sm font-semibold text-night-950 transition-colors hover:bg-gold-300'
+                className='group mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold-300 to-gold-400 px-6 py-3 text-sm font-semibold text-night-950 transition-all hover:from-gold-200 hover:to-gold-300 hover:scale-[1.02]'
               >
                 Become a Member
                 <ArrowIcon className='h-4 w-4 transition-transform group-hover:translate-x-1' />

@@ -117,7 +117,7 @@ export default function Hero() {
           >
             <a
               href='/members#register'
-              className='group inline-flex items-center gap-2 rounded-full bg-gold-400 px-7 py-3.5 text-sm font-semibold text-night-950 shadow-[0_0_40px_-8px_rgba(212,175,55,0.7)] transition-all hover:bg-gold-300 hover:shadow-[0_0_50px_-6px_rgba(212,175,55,0.85)]'
+              className='group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold-300 to-gold-400 px-7 py-3.5 text-sm font-semibold text-night-950 shadow-[0_0_40px_-8px_rgba(212,175,55,0.7)] transition-all hover:from-gold-200 hover:to-gold-300 hover:shadow-[0_0_50px_-6px_rgba(212,175,55,0.85)] hover:scale-[1.02]'
             >
               Become a Member
               <ArrowIcon className='h-4 w-4 transition-transform group-hover:translate-x-1' />
@@ -125,7 +125,7 @@ export default function Hero() {
 
             <a
               href='#events'
-              className='inline-flex items-center gap-2 rounded-full border border-cream-100/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-cream-50 backdrop-blur transition-colors hover:border-gold-400/50 hover:text-gold-200'
+              className='inline-flex items-center gap-2 rounded-full border border-cream-100/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-cream-50 backdrop-blur transition-all hover:border-gold-400/50 hover:bg-gold-400/10 hover:text-gold-200 hover:scale-[1.02]'
             >
               Explore Events
             </a>

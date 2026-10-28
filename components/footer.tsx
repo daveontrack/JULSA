@@ -35,10 +35,10 @@ const SOCIALS = [
 
 export default function Footer() {
   return (
-    <footer className='relative isolate scroll-mt-24 overflow-hidden bg-night-950 text-cream-50'>
+    <footer className='relative isolate scroll-mt-24 overflow-hidden bg-gradient-to-b from-night-950 to-night-950 text-cream-50'>
       <div
         aria-hidden='true'
-        className='absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold-400/40 to-transparent'
+        className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/40 to-transparent'
       />
       <div
         aria-hidden='true'

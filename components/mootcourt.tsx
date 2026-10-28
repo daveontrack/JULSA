@@ -1,5 +1,6 @@
 import { ArrowIcon, AwardIcon, GavelIcon } from "./icons";
 import Reveal from "./reveal";
+import Link from "next/link";
 
 const ACHIEVEMENTS = [
   {
@@ -70,13 +71,13 @@ export default function MootCourt() {
             </p>
           </Reveal>
           <Reveal delay={0.15}>
-            <a
+            <Link
               href="/#join"
-              className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/50 bg-gold-400/10 px-6 py-3 text-sm font-semibold text-gold-200 transition-all hover:bg-gold-400 hover:text-night-950"
+              className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/50 bg-gold-400/10 px-6 py-3 text-sm font-semibold text-gold-200 transition-all hover:bg-gradient-to-r hover:from-gold-300 hover:to-gold-400 hover:text-night-950 hover:scale-[1.02]"
             >
               Join a Moot Team
               <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
+            </Link>
           </Reveal>
         </div>
 
@@ -104,7 +105,7 @@ export default function MootCourt() {
               key={item.year}
               as="article"
               delay={0.1 + index * 0.08}
-              className="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.05]"
+              className="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-gold-400/5"
             >
               <div className="flex items-center justify-between">
                 <span className="font-display text-3xl font-bold text-cream-100/20 transition-colors group-hover:text-gold-400/40">

@@ -122,7 +122,7 @@ export default function Events() {
               <Reveal
                 key={event.title}
                 as='article'
-                className='group relative overflow-hidden rounded-3xl border border-gold-400/30 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/50 lg:p-10'
+                className='group relative overflow-hidden rounded-3xl border border-gold-400/30 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/50 hover:shadow-xl hover:shadow-gold-400/10 lg:p-10'
               >
                 <div
                   aria-hidden='true'
@@ -164,10 +164,10 @@ export default function Events() {
 
                 {/* Actions */}
                 <div className='relative mt-8 flex flex-wrap gap-3'>
-                  <a
-                    href='/members#register'
-                    className='inline-flex items-center gap-2 rounded-full bg-gold-400 px-5 py-2.5 text-sm font-semibold text-night-950 transition-colors hover:bg-gold-300'
-                  >
+            <a
+              href='/members#register'
+              className='group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/50 bg-gold-400/10 px-6 py-3 text-sm font-semibold text-gold-200 transition-all hover:bg-gradient-to-r hover:from-gold-300 hover:to-gold-400 hover:text-night-950 hover:scale-[1.02]'
+            >
                     Join JULSA
                     <ArrowIcon className='h-4 w-4' />
                   </a>
@@ -194,7 +194,7 @@ export default function Events() {
                   as='article'
                   direction='left'
                   delay={0.08 + index * 0.08}
-                  className='group flex items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.05]'
+                  className='group flex items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-gold-400/40 hover:bg-white/[0.06] hover:shadow-lg hover:shadow-gold-400/5'
                 >
                   {/* Date */}
                   <div className='flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl border border-gold-400/30 bg-night-900 text-center'>

@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       lang='en'
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className='min-h-full flex flex-col'>
+      <body className='min-h-full flex flex-col antialiased'>
         <noscript>
           <style>{`.reveal { opacity: 1 !important; transform: none !important; }`}</style>
         </noscript>

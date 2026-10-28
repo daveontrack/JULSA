@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #060a14;
+  --foreground: #f3ede0;
 }
 
 @theme {
@@ -16,6 +16,7 @@
   --color-night-900: #0b1220;
   --color-night-800: #111a2e;
   --color-night-700: #1a2740;
+  --color-night-600: #25314d;
 
   --color-gold-100: #f7ecce;
   --color-gold-200: #edd999;
@@ -33,6 +34,7 @@
   --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-glow: glow 9s ease-in-out infinite alternate;
   --animate-kenburns: kenburns 32s ease-in-out infinite alternate;
+  --animate-shimmer: shimmer 2.5s linear infinite;
 }
 
 @keyframes float {
@@ -64,6 +66,15 @@
   100% {
     transform: translate3d(40px, -30px, 0) scale(1.15);
     opacity: 0.9;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
   }
 }
 
@@ -119,18 +130,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #060a14;
+    --foreground: #f3ede0;
   }
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(ellipse at top, #0b1220 0%, #060a14 50%, #030712 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: #faf8f3;
 }
